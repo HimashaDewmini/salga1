@@ -3,6 +3,8 @@ const cors = require('cors');
 
 // routers
 const demoRouter = require('./routers/demoRouter')
+const productRouter = require('./routers/productRouter');
+const userRouter = require('./routers/userRouter');
 
 const app = express();
 const port = 3000;
@@ -22,7 +24,8 @@ app.use('/uploads', express.static('./uploads'));
 
 // routes
 app.use('/api', demoRouter);
-
+app.use('/api', productRouter);
+app.use('/api', userRouter);
 app.listen(port,()=>{
     console.log(`Server running on ${port}`);
 })
