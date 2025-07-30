@@ -5,6 +5,7 @@ const cors = require('cors');
 const demoRouter = require('./routers/demoRouter')
 const productRouter = require('./routers/productRouter');
 const userRouter = require('./routers/userRouter');
+const roleRouter = require('./routers/roleRoutes');
 
 const app = express();
 const port = 3000;
@@ -26,6 +27,8 @@ app.use('/uploads', express.static('./uploads'));
 app.use('/api', demoRouter);
 app.use('/api', productRouter);
 app.use('/api', userRouter);
+app.use('/api', roleRouter);
+
 app.listen(port,()=>{
     console.log(`Server running on ${port}`);
 })
