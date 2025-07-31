@@ -108,8 +108,66 @@ const createRole = async (req, res) => {
   }
 };
 
+// Update role
+const updateRole = async (req, res) => {
+    
+  try {
+    const { id } = req.params;
+    const { name, description, status } = req.body;
+    
+    // Check if role exists
+    const existingRole = await prisma.role.findUnique({
+      where: { id: parseInt(id) }
+    });
+    
+    if (!existingRole) {
+      return res.status(404).json({
+        success: false,
+        message: 'Role not found'
+      });
+    }
+    
+    // If name is being updated, check for uniqueness
+    if (name && name !== existingRole.name) {
+      const roleWithSameName = await prisma.role.findUnique({
+        where: { name }
+      });
+      
+      if (roleWithSameName) {
+        return res.status(400).json({
+          success: false,
+          message: 'Role with this name already exists'
+        });
+      }
+    }
+    
+    const updatedRole = await prisma.role.update({
+      where: { id: parseInt(id) },
+      data: {
+        ...(name && { name }),
+        ...(description !== undefined && { description }),
+        ...(status && { status })
+      }
+    });
+    
+    res.status(200).json({
+      success: true,
+      data: updatedRole,
+      message: 'Role updated successfully'
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Error updating role',
+      error: error.message
+    });
+  }
+};
+
+
 module.exports = {
   getAllRoles,
   getRoleById,
-  createRole
+  createRole,
+  updateRole
 };
